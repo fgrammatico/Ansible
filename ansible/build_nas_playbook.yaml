@@ -1,0 +1,42 @@
+---
+-
+ hosts: server
+ gather_facts: false
+ tasks:
+    - name: Install basic packages
+      apt: name= "{{ item }}"" state=present
+      with_items:
+       - net-tools
+       - ssmtp
+       - beets
+       - mdadm
+       - fail2ban
+       - ssh
+       - python3-pip
+       - ffmpeg
+#    - name: Update cache
+#      apt:
+#        update_cache: yes
+#    - name: Overwrite ssmtp file to /etc/ssmtp/ssmtp.conf
+#      copy:
+#        src: ssmtp.conf
+#        dest: /etc/ssmtp
+    - name: Test if mailing system works
+      command: mdadm --monitor --scan --test --oneshot
+    - name: Install Python modules
+      command: pip3 install mysql-connector eyeD3 -U spotdl
+    - name: Create issues.net file
+      copy:
+        src: issues.net
+        dest: /etc
+    - name: Install Docker
+      command: curl -ssl https://get.docker.com/ | sh
+    - name: Add user todocker group
+      command: usermod -aG docker $USER
+    - name: Docker pull Plex
+    - command: docker pull plexinc/pms-docker
+    - name: Docker pull MariaDB
+    - command: docker pull mariadb
+    - name: Docker pull SpotifyDL
+    - command: docker pull ritiek/spotify-downloader
+...
