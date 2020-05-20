@@ -1,7 +1,7 @@
 ---
 -
  hosts: server
- gather_facts: false
+ gather_facts: False
  tasks:
     - name: Install basic packages
       apt: name= "{{ item }}"" state=present
@@ -14,13 +14,13 @@
        - ssh
        - python3-pip
        - ffmpeg
-#    - name: Update cache
-#      apt:
-#        update_cache: yes
-#    - name: Overwrite ssmtp file to /etc/ssmtp/ssmtp.conf
-#      copy:
-#        src: ssmtp.conf
-#        dest: /etc/ssmtp
+    - name: Update cache
+      apt:
+        update_cache: True
+    - name: Overwrite ssmtp file to /etc/ssmtp/ssmtp.conf
+      copy:
+        src: ssmtp.conf
+        dest: /etc/ssmtp
     - name: Test if mailing system works
       command: mdadm --monitor --scan --test --oneshot
     - name: Install Python modules
