@@ -14,6 +14,7 @@
        - ssh
        - python3-pip
        - ffmpeg
+       - rkhunter
     - name: Update cache
       apt:
         update_cache: True
