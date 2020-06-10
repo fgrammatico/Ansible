@@ -12,32 +12,53 @@
        - mdadm
        - fail2ban
        - ssh
+       - python3
        - python3-pip
        - ffmpeg
        - rkhunter
+      tags:
+        - basic_packages 
     - name: Update cache
       apt:
         update_cache: True
+      tags:
+        - update_cache
     - name: Overwrite ssmtp file to /etc/ssmtp/ssmtp.conf
       copy:
         src: ssmtp.conf
         dest: /etc/ssmtp
+        tags:
+          - ssmtp.conf
     - name: Test if mailing system works
       command: mdadm --monitor --scan --test --oneshot
+      tags:
+        - test_smtp
     - name: Install Python modules
       command: pip3 install mysql-connector eyeD3 -U spotdl
+      tags:
+        - nas_specific
     - name: Create issues.net file
       copy:
         src: issues.net
         dest: /etc
+        tags:
+          - banner
     - name: Install Docker
       command: curl -ssl https://get.docker.com/ | sh
+      tags:
+        - install_docker
     - name: Add user todocker group
       command: usermod -aG docker $USER
     - name: Docker pull Plex
-    - command: docker pull plexinc/pms-docker
+      command: docker pull plexinc/pms-docker
+      tags:
+        - docker_plex
     - name: Docker pull MariaDB
-    - command: docker pull mariadb
+      command: docker pull mariadb
+      tags:
+        - docker_mariadb
     - name: Docker pull SpotifyDL
-    - command: docker pull ritiek/spotify-downloader
+      command: docker pull ritiek/spotify-downloader
+      tags:
+        - docker_spdl
 ...
