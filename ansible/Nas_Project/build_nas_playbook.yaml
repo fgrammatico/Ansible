@@ -50,15 +50,40 @@
     - name: Add user todocker group
       command: usermod -aG docker $USER
     - name: Docker pull Plex
-      command: docker pull plexinc/pms-docker
+      docker_image:
+       name: plexinc/pms-docker
       tags:
         - docker_plex
     - name: Docker pull MariaDB
-      command: docker pull mariadb
+      docker_image:
+       name: mariadb
       tags:
         - docker_mariadb
     - name: Docker pull SpotifyDL
-      command: docker pull ritiek/spotify-downloader
+      docker_image: 
+       name: ritiek/spotify-downloader
       tags:
         - docker_spdl
+    - name: Docker pull MineCraft BedRock Server
+      docker_image: 
+       name: minecraft-bedrock-server
+      tags:
+        - docker_minecraft
+    - name: Create specific folders
+      command: mkdir {{ items }} state=present
+      with_items:
+        - /mnt/raid1/Plexdb
+        - /mnt/raid1/MariaDb
+        - /mnt/raid1/PlexTranscode
+        - ~/.messages
+      tags:
+        - nas specific folders
+    - name: Launch container MC
+      command: docker run -d -it -e EULA=TRUE -p 19132:19132/udp --name mc --restart unless-stopped itzg/minecraft-bedrock-server
+      tags:
+        - docker_minecraft
+    - name: Launch container Plex
+      command: docker run -d --name plex --network=host --restart unless-stopped -e TZ="Europe/Amsterdam" -e PLEX_CLAIM="claim-rsC1RGXAm3LJ3z7dW7Hn" -e PLEX_UID="1000" -e PLEX_GID="1000" -h PlexServer -v /mnt/raid1/Plexdb:/config -v /mnt/raid1/PlexTranscode:/transcode -v /mnt/raid1/Plex:/data {{ plex_latest }}
+      tags:
+        - docker_plex
 ...
