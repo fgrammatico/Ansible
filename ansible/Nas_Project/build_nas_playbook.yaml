@@ -25,7 +25,7 @@
         - update_cache
     - name: Overwrite ssmtp file to /etc/ssmtp/ssmtp.conf
       copy:
-        src: ssmtp.conf
+        src: ./files/ssmtp.conf
         dest: /etc/ssmtp
         tags:
           - ssmtp.conf
@@ -39,7 +39,7 @@
         - nas_specific
     - name: Create issues.net file
       copy:
-        src: issues.net
+        src: ./files/issues.net
         dest: /etc
         tags:
           - banner
