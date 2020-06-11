@@ -16,6 +16,7 @@
        - python3-pip
        - ffmpeg
        - rkhunter
+       - lsyncd
       tags:
         - basic_packages 
     - name: Update cache
