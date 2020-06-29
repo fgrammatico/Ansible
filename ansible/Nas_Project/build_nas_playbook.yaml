@@ -35,7 +35,7 @@
     - name: Install Python modules
       command: pip3 install mysql-connector eyeD3 -U spotdl
       tags:
-        - nas_specific
+        - pip_specific_nas
     - name: Create issues.net file
       copy:
         src: ./files/issues.net
