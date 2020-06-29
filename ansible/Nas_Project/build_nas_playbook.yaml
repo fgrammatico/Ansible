@@ -19,11 +19,9 @@
        - lsyncd
       tags:
         - basic_packages 
-    - name: Update cache
-      apt:
-        update_cache: True
-      tags:
-        - update_cache
+      notify:
+        - Update cache
+    - meta: flush_handlers
     - name: Overwrite ssmtp file to /etc/ssmtp/ssmtp.conf
       copy:
         src: ./files/ssmtp.conf
@@ -87,4 +85,18 @@
       command: docker run -d --name plex --network=host --restart unless-stopped -e TZ="Europe/Amsterdam" -e PLEX_CLAIM="claim-rsC1RGXAm3LJ3z7dW7Hn" -e PLEX_UID="1000" -e PLEX_GID="1000" -h PlexServer -v /mnt/raid1/Plexdb:/config -v /mnt/raid1/PlexTranscode:/transcode -v /mnt/raid1/Plex:/data {{ plex_latest }}
       tags:
         - docker_plex
+    - name: Launch container MariaDB
+      command: docker run -d --name mariadb -p 3307:3306 --restart unless-stopped -v db:/var/lib/mysql -p 3307:3306 -e MYSQL_ROOT_PASSWORD={ mariadb_rootpwd } -e MYSQL_PASSWORD={ mariadb_userpwd } -e MYSQL_DATABASE=nextcloud -e MYSQL_USER=nextcloud {{ mariadb_latest }}
+      tags:
+        - docker_mariadb
+    - name: Launch container NextCloud
+      command: docker run -d --name nextcloud -p 8080:80 --restart unless-stopped -v apps:/var/www/html/custom_apps -v config:/var/www/html/config -v data:/var/www/data -v nextcloud:/var/www/html nextcloud
+      tags:
+        - docker_nextcloud
+ handlers:
+    - name: Update cache
+      apt:
+        update_cache: True
+      tags:
+        - update_cache
 ...
