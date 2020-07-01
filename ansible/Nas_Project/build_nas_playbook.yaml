@@ -24,8 +24,11 @@
     - meta: flush_handlers
     - name: Overwrite ssmtp file to /etc/ssmtp/ssmtp.conf
       copy:
-        src: ./files/ssmtp.conf
+        src: ssmtp.conf
         dest: /etc/ssmtp
+        owner: slashviper
+        group: slashviper
+        mode: 0600
         tags:
           - ssmtp.conf
     - name: Test if mailing system works
@@ -38,8 +41,11 @@
         - pip_specific_nas
     - name: Create issues.net file
       copy:
-        src: ./files/issues.net
+        src: issues.net
         dest: /etc
+        owner: slashviper
+        group: slashviper
+        mode: 0600
         tags:
           - banner
     - name: Install Docker
@@ -82,11 +88,11 @@
       tags:
         - docker_minecraft
     - name: Launch container Plex
-      command: docker run -d --name plex --network=host --restart unless-stopped -e TZ="Europe/Amsterdam" -e PLEX_CLAIM="claim-rsC1RGXAm3LJ3z7dW7Hn" -e PLEX_UID="1000" -e PLEX_GID="1000" -h PlexServer -v /mnt/raid1/Plexdb:/config -v /mnt/raid1/PlexTranscode:/transcode -v /mnt/raid1/Plex:/data {{ plex_latest }}
+      command: docker run -d --name plex --network=host --restart unless-stopped -e TZ="Europe/Amsterdam" -e PLEX_CLAIM="claim-rsC1RGXAm3LJ3z7dW7Hn" -e PLEX_UID="1000" -e PLEX_GID="1000" -h PlexServer -v /mnt/raid1/Plexdb:/config -v /mnt/raid1/PlexTranscode:/transcode -v /mnt/raid1/Plex:/data plex_latest
       tags:
         - docker_plex
     - name: Launch container MariaDB
-      command: docker run -d --name mariadb -p 3307:3306 --restart unless-stopped -v db:/var/lib/mysql -e MYSQL_ROOT_PASSWORD={ mariadb_rootpwd } -e MYSQL_PASSWORD={ mariadb_userpwd } -e MYSQL_DATABASE=nextcloud -e MYSQL_USER=nextcloud -e MYSQL_HOST=nextcloud {{ mariadb_latest }}
+      command: docker run -d --name mariadb -p 3307:3306 --restart unless-stopped -v db:/var/lib/mysql -e MYSQL_ROOT_PASSWORD={ mariadb_rootpwd } -e MYSQL_PASSWORD={ mariadb_userpwd } -e MYSQL_DATABASE=nextcloud -e MYSQL_USER=nextcloud -e MYSQL_HOST=nextcloud mariadb_latest
       tags:
         - docker_mariadb
     - name: Launch container NextCloud
@@ -99,4 +105,3 @@
         update_cache: True
       tags:
         - update_cache
-...
