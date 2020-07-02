@@ -24,7 +24,7 @@
     - meta: flush_handlers
     - name: Overwrite ssmtp file to /etc/ssmtp/ssmtp.conf
       copy:
-        src: ssmtp.conf
+        src: ./files/ssmtp.conf
         dest: /etc/ssmtp
         owner: slashviper
         group: slashviper
@@ -41,7 +41,7 @@
         - pip_specific_nas
     - name: Create issues.net file
       copy:
-        src: issues.net
+        src: ./files/issues.net
         dest: /etc
         owner: slashviper
         group: slashviper
