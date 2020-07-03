@@ -4,8 +4,8 @@
  gather_facts: True
  tasks:
     - name: Install basic packages
-      package: 
-        name:
+      package: name={{ item }} state=present
+      with_items:
         - net-tools
         - ssmtp
         - beets
@@ -18,16 +18,15 @@
         - rkhunter
         - lsyncd
         - tree
-        state: present
       register: result_install_packages
       tags:
         - basic_packages 
       notify:
         - Update cache
-    - debug: msg="{{ result_install_packages|default("nothing to install") }}"
+    - meta: flush_handlers        
+    - debug: msg="{{ result_install_packages|default("nothing was installed") }}"
       tags:
-        - debug_packages   
-    - meta: flush_handlers
+        - debug_packages
     - name: Overwrite ssmtp file to /etc/ssmtp/ssmtp.conf
       copy:
         src: ./files/ssmtp.conf
