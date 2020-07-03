@@ -4,23 +4,29 @@
  gather_facts: True
  tasks:
     - name: Install basic packages
-      apt: name= "{{ item }}" state=present
-      with_items:
-       - net-tools
-       - ssmtp
-       - beets
-       - mdadm
-       - fail2ban
-       - ssh
-       - python3
-       - python3-pip
-       - ffmpeg
-       - rkhunter
-       - lsyncd
+      package: 
+        name:
+        - net-tools
+        - ssmtp
+        - beets
+        - mdadm
+        - fail2ban
+        - ssh
+        - python3
+        - python3-pip
+        - ffmpeg
+        - rkhunter
+        - lsyncd
+        - tree
+        state: present
+      register: result_install_packages
       tags:
         - basic_packages 
       notify:
         - Update cache
+    - debug: msg="{{ result_install_packages|default("nothing to install") }}"
+      tags:
+        - debug_packages   
     - meta: flush_handlers
     - name: Overwrite ssmtp file to /etc/ssmtp/ssmtp.conf
       copy:
@@ -29,6 +35,7 @@
         owner: slashviper
         group: slashviper
         mode: 0600
+        register: result_copy_ssmtp
         tags:
           - ssmtp.conf
     - name: Test if mailing system works
@@ -37,6 +44,7 @@
         - test_smtp
     - name: Install Python modules
       command: pip3 install mysql-connector eyeD3 -U spotdl
+      register: result_install_pymods
       tags:
         - pip_specific_nas
     - name: Create issues.net file
@@ -50,8 +58,12 @@
           - banner
     - name: Install Docker
       command: curl -ssl https://get.docker.com/ | sh
+      register: result_install_docker
       tags:
         - install_docker
+    - debug: msg="{{ result_install_docker|default("nothing to install") }}"
+      tags:
+        - debug_docker
     - name: Add user todocker group
       command: usermod -aG docker $USER
     - name: Docker pull Plex
