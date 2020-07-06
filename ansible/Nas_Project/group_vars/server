@@ -1,3 +1,2 @@
 ---
-    ansible_become: True
-...
+ansible_become: True

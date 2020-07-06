@@ -42,7 +42,7 @@
       tags:
         - test_smtp
     - name: Install Python modules
-      command: pip3 install mysql-connector eyeD3 -U spotdl
+      command: pip3 install mysql-connector eyeD3 -U spotdl docker
       register: result_install_pymods
       tags:
         - pip_specific_nas
@@ -55,14 +55,6 @@
         mode: 0600
         tags:
           - banner
-    - name: Install Docker
-      command: curl -ssl https://get.docker.com/ | sh
-      register: result_install_docker
-      tags:
-        - install_docker
-    - debug: msg="{{ result_install_docker|default("nothing to install") }}"
-      tags:
-        - debug_docker
     - name: Add user todocker group
       command: usermod -aG docker $USER
     - name: Docker pull Plex
@@ -110,6 +102,12 @@
       command: docker run -d --name nextcloud -p 8080:80 --restart unless-stopped -v apps:/var/www/html/custom_apps -v config:/var/www/html/config -v data:/var/www/data -v nextcloud:/var/www/html nextcloud
       tags:
         - docker_nextcloud
+    - name: Container present
+      docker_container:
+        name: alpine
+        image: alpine
+      tags:
+        - alpine
  handlers:
     - name: Update cache
       apt:
