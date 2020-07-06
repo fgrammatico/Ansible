@@ -18,6 +18,7 @@
         - rkhunter
         - lsyncd
         - tree
+        - ncdu
       register: result_install_packages
       tags:
         - basic_packages 
