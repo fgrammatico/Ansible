@@ -26,4 +26,4 @@ BSD
 
 To Do
 ------------------
-Currently is being transformed into a Role so each task can be used for other projects.
+
