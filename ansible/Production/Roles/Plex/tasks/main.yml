@@ -1,2 +1,47 @@
 ---
 # tasks file for Plex
+- name: Install basic packages Plex
+  package: name={{ item }} state=present
+  with_items:
+    - beets #https://beets.io/
+    - mdadm #https://raid.wiki.kernel.org/index.php/A_guide_to_mdadm
+    - ffmpeg #https://ffmpeg.org/
+    - lsyncd #https://axkibe.github.io/lsyncd/
+    - tree #https://www.computerhope.com/unix/tree.htm
+    - ncdu #https://www.binarytides.com/check-disk-usage-linux-ncdu/
+  register: result_install_packages_plex
+  tags:
+    - basic_packages_plex
+  notify:
+    - Update cache
+- name: Install Python modules
+  command: pip3 install mysql-connector eyeD3 -U spotdl docker
+  register: result_install_pymods
+  tags:
+    - pip_specific_nas
+- meta: flush_handlers        
+- debug: msg="{{ result_install_packages_plex|default("nothing was installed") }}"
+  tags:
+    - debug_packages_plex
+- name: Test if mailing system works
+  command: mdadm --monitor --scan --test --oneshot
+  tags:
+    - test_smtp
+- name: Create specific folders
+  command: mkdir {{ items }} state=present
+  with_items:
+    - /mnt/raid1/Plexdb
+    - /mnt/raid1/MariaDb
+    - /mnt/raid1/PlexTranscode
+    - ~/.messages
+  tags:
+    - nas specific folders
+- name: Docker pull Plex
+  docker_image:
+    name: plexinc/pms-docker
+  tags:
+    - docker_plex
+- name: Launch container Plex
+  command: docker run -d --name plex --network=host --restart unless-stopped -e TZ="Europe/Amsterdam" -e PLEX_CLAIM="claim-rsC1RGXAm3LJ3z7dW7Hn" -e PLEX_UID="1000" -e PLEX_GID="1000" -h PlexServer -v /mnt/raid1/Plexdb:/config -v /mnt/raid1/PlexTranscode:/transcode -v /mnt/raid1/Plex:/data plex_latest
+  tags:
+    - docker_plex

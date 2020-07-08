@@ -1,0 +1,10 @@
+---
+# This playbook will prepare an Ubuntu server to host Plex and few docker containers
+-
+  #Target
+  hosts: server
+  roles:
+    - Security
+    - Docker
+    - Plex
+    - Minecraft

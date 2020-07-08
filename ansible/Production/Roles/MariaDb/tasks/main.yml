@@ -1,0 +1,6 @@
+---
+# tasks file for MariaDb
+- name: Launch container MariaDB
+  command: docker run -d --name mariadb -p 3307:3306 --restart unless-stopped -v db:/var/lib/mysql -e MYSQL_ROOT_PASSWORD="{{ mariadb_rootpwd }}" -e MYSQL_PASSWORD="{{ mariadb_userpwd }}" -e MYSQL_DATABASE=nextcloud -e MYSQL_USER=nextcloud -e MYSQL_HOST=nextcloud mariadb_latest
+  tags:
+    - docker_mariadb

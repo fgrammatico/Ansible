@@ -30,14 +30,8 @@
         - debug_packages
     - name: Overwrite ssmtp file to /etc/ssmtp/ssmtp.conf
       copy:
-        src: ./files/ssmtp.conf
+        src: ssmtp.conf
         dest: /etc/ssmtp
-        owner: slashviper
-        group: slashviper
-        mode: 0600
-        register: result_copy_ssmtp
-        tags:
-          - ssmtp.conf
     - name: Test if mailing system works
       command: mdadm --monitor --scan --test --oneshot
       tags:
@@ -51,9 +45,6 @@
       copy:
         src: ./files/issues.net
         dest: /etc
-        owner: slashviper
-        group: slashviper
-        mode: 0600
         tags:
           - banner
     - name: Add user todocker group
@@ -103,12 +94,6 @@
       command: docker run -d --name nextcloud -p 8080:80 --restart unless-stopped -v apps:/var/www/html/custom_apps -v config:/var/www/html/config -v data:/var/www/data -v nextcloud:/var/www/html nextcloud
       tags:
         - docker_nextcloud
-    - name: Container present
-      docker_container:
-        name: alpine
-        image: alpine
-      tags:
-        - alpine
  handlers:
     - name: Update cache
       apt:

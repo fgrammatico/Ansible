@@ -1,2 +1,7 @@
 ---
 # handlers file for Plex
+- name: Update cache Plex
+  apt:
+    update_cache: True
+  tags:
+    - update_cache_plex

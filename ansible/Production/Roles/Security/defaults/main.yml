@@ -1,2 +1,4 @@
 ---
 # defaults file for Security
+ssmtp_dest: /etc/ssmtp
+banner_target: /etc

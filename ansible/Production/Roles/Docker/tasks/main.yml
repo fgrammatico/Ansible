@@ -1,2 +1,12 @@
 ---
 # tasks file for Docker
+- name: Install Docker from Pip3
+  command: pip3 install docker
+  register: result_install_Docker
+  tags:
+    - Docker_Install
+- debug: msg="{{ result_install_Docker|default("nothing was installed") }}"
+  tags:
+    - debug_Docker_Installation
+- name: Add user todocker group
+  command: usermod -aG docker $USER

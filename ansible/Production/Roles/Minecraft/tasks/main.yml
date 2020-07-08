@@ -1,2 +1,11 @@
 ---
 # tasks file for Minecraft
+- name: Docker pull MineCraft BedRock Server
+  docker_image: 
+    name: minecraft-bedrock-server
+  tags:
+    - docker_minecraft
+- name: Launch container MC
+  command: docker run -d -it -e EULA=TRUE -p 19132:19132/udp --name mc --restart unless-stopped itzg/minecraft-bedrock-server
+  tags:
+    - docker_minecraft

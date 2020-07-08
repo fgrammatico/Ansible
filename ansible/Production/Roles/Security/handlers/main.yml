@@ -1,2 +1,7 @@
 ---
 # handlers file for Security
+- name: Update cache Security
+  apt:
+    update_cache: True
+  tags:
+    - update_cache_sec
