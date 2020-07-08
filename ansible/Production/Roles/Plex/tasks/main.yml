@@ -28,7 +28,10 @@
   tags:
     - test_smtp
 - name: Create specific folders
-  command: mkdir {{ items }} state=present
+  file:
+  path: "{{ items }}"
+  state: directory
+  mode: '0755'
   with_items:
     - /mnt/raid1/Plexdb
     - /mnt/raid1/MariaDb
