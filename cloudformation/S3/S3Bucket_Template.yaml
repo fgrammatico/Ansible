@@ -1,14 +1,3 @@
-AWSTemplateFormatVersion: 2010-09-09
-Metadata:
-  'AWS::CloudFormation::Designer':
-    38e964cc-eecd-4f08-8f27-a582b772ece9:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 652
-        'y': 171
-      z: 0
 Resources:
   MyS3Bucket:
     Type: 'AWS::S3::Bucket'
