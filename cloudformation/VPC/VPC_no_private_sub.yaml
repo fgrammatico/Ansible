@@ -51,21 +51,88 @@ Resources:
       RouteTableId: !Ref PublicRouteTable
   SSHSecurityGroup:
     Type: AWS::EC2::SecurityGroup
+    DependsOn: VPC
     Properties:
-      GroupDescription: Enable SSH access via port 22
+      GroupDescription: Enable only SSH access via port 22
       SecurityGroupIngress:
       - CidrIp: 10.1.10.0/24
         FromPort: 22
         IpProtocol: tcp
-        ToPort: 22    
+        ToPort: 22
+      VpcId:
+         Ref: VPC
+  HTTPSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    DependsOn: VPC
+    Properties:
+      GroupDescription: Enable HTTP access via port 80
+      SecurityGroupIngress:
+      - CidrIp: 10.1.10.0/24
+        FromPort: 80
+        IpProtocol: tcp
+        ToPort: 80
+      VpcId:
+         Ref: VPC
+  HTTPSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    DependsOn: VPC
+    Properties:
+      GroupDescription: Enable HTTPS access via port 443
+      SecurityGroupIngress:
+      - CidrIp: 10.1.10.0/24
+        FromPort: 443
+        IpProtocol: tcp
+        ToPort: 443
+      VpcId:
+         Ref: VPC
+  WebServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    DependsOn: VPC
+    Properties:
+      GroupDescription: Enable HTTPS,HTTP,SSH access via port 443,22,80
+      SecurityGroupIngress:
+      - CidrIp: 10.1.10.0/24
+        FromPort: 443
+        IpProtocol: tcp
+        ToPort: 443
+      - CidrIp: 10.1.10.0/24
+        FromPort: 80
+        IpProtocol: tcp
+        ToPort: 80
+      - CidrIp: 10.1.10.0/24
+        FromPort: 22
+        IpProtocol: tcp
+        ToPort: 22
+      VpcId:
+         Ref: VPC      
 Outputs:
   StackSSHSecurityGroup:
     Description: The SSH Security Group of my VPC
     Value: !Ref SSHSecurityGroup
     Export:
-      Name: SSHSecurityGroup
+      Name: SSH-Only-SecurityGroup
+  StackHTTPSecurityGroup:
+    Description: The HTTP Security Group of my VPC
+    Value: !Ref HTTPSecurityGroup
+    Export:
+      Name: HTTP-Only-SecurityGroup
+  StackHTTPSSecurityGroup:
+    Description: The HTTPS Security Group of my VPC
+    Value: !Ref HTTPSSecurityGroup
+    Export:
+      Name: HTTPS-Only-SecurityGroup
+  StackWEBSecurityGroup:
+    Description: The SSH Security Group of my VPC
+    Value: !Ref WebServerSecurityGroup
+    Export:
+      Name: Web-SecurityGroup
   StackVPC:
     Description: The VPC
     Value: !Ref VPC
     Export:
       Name: VPC
+  StackSubnetA:
+    Description: Public Subnet
+    Value: !Ref PublicSubnetA
+    Export:
+      Name: Public-Subnet
