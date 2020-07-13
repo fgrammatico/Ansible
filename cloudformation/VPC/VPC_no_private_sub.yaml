@@ -48,4 +48,27 @@ Resources:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PublicSubnetA
-      RouteTableId: !Ref PublicRouteTable       
+      RouteTableId: !Ref PublicRouteTable
+  SSHSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access via port 22
+      SecurityGroupIngress:
+      - CidrIp: 10.1.10.0/24
+        FromPort: 22
+        IpProtocol: tcp
+        ToPort: 22    
+Outputs:
+  StackSSHSecurityGroup:
+    Description: The SSH Security Group of my VPC
+    Value: !Ref SSHSecurityGroup
+    Export:
+      Name: SSHSecurityGroup
+  StackVPC:
+    Description: The VPC
+    Value: !Ref     Description: The SSH Security Group of my VPC
+    Value: !Ref VPC
+    Export:
+      Name: VPC
+    Export:
+      Name: VPC
