@@ -66,9 +66,6 @@ Outputs:
       Name: SSHSecurityGroup
   StackVPC:
     Description: The VPC
-    Value: !Ref     Description: The SSH Security Group of my VPC
     Value: !Ref VPC
-    Export:
-      Name: VPC
     Export:
       Name: VPC
