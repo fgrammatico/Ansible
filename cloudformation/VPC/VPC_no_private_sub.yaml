@@ -1,5 +1,5 @@
 Resources:
-# Generic VPC with public/private subnets with NatGateway:
+# Generic VPC with only public subnet with InternetGateway:
   VPC:
     Type: AWS::EC2::VPC
     Properties:
