@@ -1,2 +1,48 @@
 ---
 # tasks file for Desktop
+---
+# tasks file for Plex
+- name: Install basic packages for Desktop
+  package: name={{ item }} state=present
+  with_items:
+    - git-all
+    - lsyncd #https://axkibe.github.io/lsyncd/
+    - tree #https://www.computerhope.com/unix/tree.htm
+    - ncdu #https://www.binarytides.com/check-disk-usage-linux-ncdu/
+    - rsync
+    - megacmd
+    - virtualbox
+  register: result_install_packages_desktop
+  tags:
+    - basic_packages_desktop
+  notify:
+    - Update cache
+- name: Install Python modules
+  command: pip3 install mysql-connector docker
+  register: result_install_pymodules_desktop
+  tags:
+    - pip_specific_desktop
+- name: Install AWS CLI
+  command:
+    argv:
+      - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" 
+      - unzip awscliv2.zip 
+      - ./aws/install
+  register: result_install_aws_cli
+  tags:
+    - aws_cli
+- meta: flush_handlers        
+- debug: msg="{{ result_install_packages_desktop|default("nothing was installed") }}"
+  tags:
+    - debug_packages_desktop
+- name: Create specific folders
+  file:
+  path: "{{ items }}"
+  state: directory
+  mode: '0755'
+  with_items:
+    - ~/Documents/Work_Documents
+    - ~/test
+    - ~/.messages
+  tags:
+    - desktop specific folders
