@@ -6,7 +6,7 @@ This is just an example and is meant to be used as template.
 
 Requirements
 ------------
-This playbook was tested on a Ubuntu server so any other flavour of Linux will probably fail.
+These playbooks were tested on a Ubuntu server so any other flavour of Linux will probably fail.
 
 Host Variables
 --------------
