@@ -129,5 +129,5 @@ def exit_func():
     This function is just to exit the lambda script
     '''
     return {'statusCode': 200,'body': json.dumps(status)}
-
-lambda_handler('RequestId: 371258a2-1392-478e-9125-c918b4d33182','RequestId: 371258a2-1392-478e-9125-c918b4d33182')
+# test lambda locally removing the comment below
+#lambda_handler('RequestId: 371258a2-1392-478e-9125-c918b4d33182','RequestId: 371258a2-1392-478e-9125-c918b4d33182')
