@@ -29,6 +29,8 @@ Installation
 
 * Setup serverless "serverless config credentials --provider aws --key XXX --secret YYY --profile serverless-admin"
 
+* Edit as you please the variables in handler.py and serverless.yaml
+
 * Clone the repository, cd into it and run "sls deploy -v"
 
 ToDo
