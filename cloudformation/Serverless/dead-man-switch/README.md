@@ -13,6 +13,8 @@ Pre-requisites
 
 * Python3 
 * Pip
+* Boto3 (Pip)
+* Re (Pip)
 * AWS-cli
 * Serverless cli
 * Node.js 
