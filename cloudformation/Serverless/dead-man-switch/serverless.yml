@@ -12,15 +12,6 @@ provider:
   Statement:
   - Effect: Allow
     Action:
-    - sns:AddPermission
-    - sns:CreateTopic
-    - sns:DeleteTopic
-    - sns:ListTopics
-    - sns:SetTopicAttributes
-    - sns:GetTopicAttributes
-    Resource: "*"
-  - Effect: Allow
-    Action:
     - s3:CreateBucket
     - s3:DeleteBucket
     - s3:ListAllMyBuckets
