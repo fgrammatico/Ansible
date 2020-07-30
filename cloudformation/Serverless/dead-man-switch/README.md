@@ -19,8 +19,8 @@ Pre-requisites
 * Serverless cli
 * Node.js 
 * Valid AWS account
-* A serverless-admin user with admin access with attached Role for SES,Lambda,S3,Cloudtrail
-* SES Smtp with validated emails
+* A serverless role permission to SES,Lambda,S3,Cloudtrail
+* Valid SES recipients
 
 Installation
 -----------------
@@ -37,4 +37,4 @@ Installation
 
 ToDo
 --------------------
-Create full automation of the requirements in Ansible and cloudformation stack trigger
+Create full automation of the requirements in Python3 script
