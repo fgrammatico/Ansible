@@ -1,35 +1,25 @@
 import os
 import json
-import logging
-import smtplib
 from datetime import datetime , timedelta
 import boto3
-import traceback
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger()
-#date
+# N is the days the script will look back from the date of now.
 N = 90
 DELTA = datetime.now() - timedelta(days = N)
 DATENOW = datetime.now()
-#ses credentials
-SESUSR = 'key'
-SESPASS = 'secret'
-#s3 credentials
-DMSBUCKET = 'bucket'
-#cloudtrail
-AWSUSER = 'your username'
-REGION = 'your region'
-#smtp
-SMPTPORT = 587
-smtpserver = 'email-smtp.' + REGION + '.amazonaws.com'
-fromaddress = 'enteryourmail@mail.com'
-toaddress = 'enteryourmail@mail.com'
+# S3 bucket where the mails are located
+DMSBUCKET = 'dms-bucket-fabio'
+# Cloudtrail account and AZ
+AWSUSER = 'Fabio'
+REGION = 'eu-central-1'
+# Mail recipients
+fromaddress = 'gufoqi4v3ydw@abinemail.com'
+toaddress = 'fabio.grammatico@outlook.com'
+# Notification settings
 status = 'success'
-body ='''\
-Subject: Dead Man Switch report
+defaultbody = 'Dead Man Switch Job ran ' ' @ ' + str(DATENOW)
+defaultsubject = 'Dead Man Switch Notification'
 
-This message is sent to inform you that the Dead Man Switch ran @ ''' + str(DATENOW)
 # You can change the temp folder to test it locally or on AWS
 TEMP = '/tmp/'
 
@@ -41,7 +31,7 @@ def lambda_handler(event, context):
     and "N" days.
     '''
     try:
-        logger.info('Starting lambda handler')
+        print ('Starting lambda handler')
         client = boto3.client('cloudtrail',REGION)
         response = client.lookup_events(
         LookupAttributes=[
@@ -56,15 +46,15 @@ def lambda_handler(event, context):
         )
         returnuser = response['Events'][0]['Username']
         logindate = response['Events'][0]['EventTime']
-        logger.info('"User found ' + returnuser + ' and logindate ' + str(logindate) + '"')
+        print ('"User found ' + returnuser + ' and logindate ' + str(logindate) + '"')
         if str(returnuser) == str(AWSUSER):
-            msg = body + ' with a ' + status + ' status'
+            msg = defaultbody + ' with ' + status + ' status'
             mailer_func(fromaddress,toaddress,msg,status)
         else:
             deadman_switch()
-    except Exception as error:
-        errdescr = type(error).__name__ + '\n' + traceback.format_exc()
-        logger.info(errdescr)
+    except:
+        errdescr = 'Something went really,really wrong'
+        print (errdescr)
         error_func(errdescr)
 
 def error_func(errdescr):
@@ -73,10 +63,10 @@ def error_func(errdescr):
     '''
     try:
         status = 'failed'
-        msg = body + ' with ' + status + ' status and error ' + errdescr
+        msg = defaultbody + ' with ' + status + ' status and error ' + errdescr
         mailer_func(fromaddress,toaddress,msg,status)
     except:
-        logger.info('"The error function was in error! How did you do it????"')
+        print ('"The error function was in error! How did you do it????"')
         exit_func()
 
 def deadman_switch():
@@ -85,7 +75,7 @@ def deadman_switch():
     and read its content.
     '''
     try:
-        logger.info('"Dead man switch logger started"')
+        print ('"Dead man switch logger started"')
         s3_resource = boto3.resource('s3')
         dmsbucket = s3_resource.Bucket(DMSBUCKET)
         for s3_object in dmsbucket.objects.all():
@@ -95,15 +85,15 @@ def deadman_switch():
             file = open(TEMP + filename, 'r')
             line = file.read()
             file.close()
-            status = '\nGoodbye'
+            status = '\n*******'
             msg = line + status
             toaddress = filename
             os.remove(TEMP + filename)
             mailer_func(fromaddress,toaddress,msg,status)
         exit_func()
-    except Exception as error:
-        errdescr = type(error).__name__ + '\n' + traceback.format_exc()
-        logger.info(errdescr)
+    except:
+        errdescr = 'Something went really,really wrong'
+        print (errdescr)
         error_func(errdescr)
 
 def mailer_func(fromaddress,toaddress,msg,status):
@@ -111,17 +101,31 @@ def mailer_func(fromaddress,toaddress,msg,status):
     This function will produce an email
     '''
     try:
-        logger.info('"Starting the mailer"')
-        smtp_object=smtplib.SMTP(smtpserver, int(SMPTPORT))
-        smtp_object.ehlo()
-        smtp_object.starttls()
-        smtp_object.login(SESUSR,SESPASS)
-        smtp_object.sendmail(fromaddress, toaddress, msg)
-        smtp_object.quit
-        logger.info('Mailer completed')
-    except Exception as error:
-        errdescr = type(error).__name__ + '\n' + traceback.format_exc()
-        logger.info(errdescr)
+        print ('"Starting the mailer"')
+        client = boto3.client('ses','eu-central-1')
+        response = client.send_email(
+            Source= fromaddress,
+            Destination={
+                'ToAddresses': [
+                    toaddress,
+                ]
+            },
+            Message={
+                'Subject': {
+                    'Data': defaultsubject,
+                },
+                'Body': {
+                    'Text': {
+                        'Data': msg,
+                    }
+                }
+            }
+        )
+        print(response)
+        print ('Mailer completed')
+    except:
+        errdescr = 'Something went really,really wrong'
+        print (errdescr)
         exit_func()
 
 def exit_func():
@@ -129,5 +133,7 @@ def exit_func():
     This function is just to exit the lambda script
     '''
     return {'statusCode': 200,'body': json.dumps(status)}
+
+
 # test lambda locally removing the comment below
 #lambda_handler('RequestId: 371258a2-1392-478e-9125-c918b4d33182','RequestId: 371258a2-1392-478e-9125-c918b4d33182')

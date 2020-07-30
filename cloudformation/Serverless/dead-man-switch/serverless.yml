@@ -5,70 +5,45 @@ provider:
   runtime: python3.8
   timeout: 6
   region: eu-central-1
-  profile: serverless-admin
+  profile: default
   memorySize: 128
   iamRoleStatements:
-  Version: '2012-10-17'
-  Statement:
-  - Effect: Allow
-    Action:
-    - s3:CreateBucket
-    - s3:DeleteBucket
-    - s3:ListAllMyBuckets
-    - s3:PutBucketPolicy
-    - s3:ListBucket
-    - s3:GetObject
-    - s3:GetBucketLocation
-    - s3:GetBucketPolicy
-    Resource: "*"
-  - Effect: Allow
-    Action: cloudtrail:*
-    Resource: "*"
-  - Effect: Allow
-    Action:
-    - logs:CreateLogGroup
-    Resource: "*"
-  - Effect: Allow
-    Action:
-    - iam:ListRoles
-    - iam:GetRolePolicy
-    - iam:GetUser
-    Resource: "*"
-  - Effect: Allow
-    Action:
-    - iam:PassRole
-    Resource: "*"
-    Condition:
-      StringEquals:
-        iam:PassedToService: cloudtrail.amazonaws.com
-  - Effect: Allow
-    Action:
-    - kms:ListKeys
-    - kms:ListAliases
-    Resource: "*"
-  - Effect: Allow
-    Action:
-    - lambda:ListFunctions
-    Resource: "*"
+    - Effect: 'Allow'
+      Action:
+        - s3:ListAllMyBuckets
+        - s3:PutBucketPolicy
+        - s3:ListBucket
+        - s3:GetObject
+        - s3:GetBucketLocation
+        - s3:GetBucketPolicy
+      Resource: "*"
+    - Effect: 'Allow'
+      Action: 
+        - cloudtrail:LookupEvents
+      Resource: "*"
+    - Effect: 'Allow'
+      Action:
+        - logs:CreateLogGroup
+      Resource: "*"
+    - Effect: 'Allow'
+      Action:
+        - kms:ListKeys
+        - kms:ListAliases
+      Resource: "*"
+    - Effect: 'Allow'
+      Action:
+        - lambda:ListFunctions
+      Resource: "*"
+    - Effect: 'Allow'
+      Action:
+        - ses:SendEmail
+      Resource: "*"
 
+functions:
+  lambda_handler:
+    handler: handler.lambda_handler
+    timeout: 60
+    access: private
+    events: 
+      - schedule: rate(90 days)
 
-  functions:
-    lambda_handler:
-      handler: handler.lambda_handler
-      timeout: 60
-      events: 
-        - schedule: rate(10 minutes) # run at 8 PM UTC every day (9 am CET)
-
-
-  Resources:
-    lambda_handler:
-      Type: AWS::Serverless::Function
-      Properties:
-        CodeUri: lambda_handler/
-        Handler: handler.lambda_handler
-        Events:
-          ScheduledEvent:
-            Type: Schedule
-            Properties:
-              Schedule: rate(90 days)
-              Enabled: False
