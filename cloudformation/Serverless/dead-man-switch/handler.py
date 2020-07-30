@@ -8,13 +8,13 @@ N = 90
 DELTA = datetime.now() - timedelta(days = N)
 DATENOW = datetime.now()
 # S3 bucket where the mails are located
-DMSBUCKET = 'dms-bucket-fabio'
+DMSBUCKET = ''
 # Cloudtrail account and AZ
-AWSUSER = 'Fabio'
-REGION = 'eu-central-1'
+AWSUSER = ''
+REGION = ''
 # Mail recipients
-fromaddress = 'gufoqi4v3ydw@abinemail.com'
-toaddress = 'fabio.grammatico@outlook.com'
+fromaddress = ''
+toaddress = ''
 # Notification settings
 status = 'success'
 defaultbody = 'Dead Man Switch Job ran ' ' @ ' + str(DATENOW)
