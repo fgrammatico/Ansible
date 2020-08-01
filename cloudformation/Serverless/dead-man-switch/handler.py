@@ -4,8 +4,8 @@ from datetime import datetime , timedelta
 import boto3
 
 # N is the days the script will look back from the date of now.
-N = 90
-DELTA = datetime.now() - timedelta(days = N)
+NDAYS = 90
+DELTA = datetime.now() - timedelta(days = NDAYS)
 DATENOW = datetime.now()
 # S3 bucket where the mails are located
 DMSBUCKET = ''
@@ -14,6 +14,7 @@ AWSUSER = ''
 REGION = ''
 # Mail recipients
 fromaddress = ''
+dmsaddress = ''
 toaddress = ''
 # Notification settings
 status = 'success'
@@ -28,7 +29,7 @@ TEMP = '/tmp/'
 def lambda_handler(event, context):
     '''
     This function will query cloudtrail for all console login in the expected region and delta from time of now
-    and "N" days.
+    and "NDAYS" days.
     '''
     try:
         print ('Starting lambda handler')
@@ -49,7 +50,7 @@ def lambda_handler(event, context):
         print ('"User found ' + returnuser + ' and logindate ' + str(logindate) + '"')
         if str(returnuser) == str(AWSUSER):
             msg = defaultbody + ' with ' + status + ' status'
-            mailer_func(fromaddress,toaddress,msg,status)
+            mailer_func(dmsaddress,toaddress,msg,status)
         else:
             deadman_switch()
     except:
