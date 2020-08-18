@@ -1,12 +1,35 @@
 ---
 # tasks file for Docker
-- name: Install Docker from Pip3
-  command: pip3 install docker
+- name: Install pre-requisites Docker
+  package: name={{ item }} state=present
+  with_items:
+  - apt-transport-https
+  - ca-certificates 
+  - curl 
+  - gnupg-agent 
+  - software-properties-common
+  register: result_install_preDocker
+  tags:
+    - preDocker_Install
+- debug: msg="{{ result_install_preDocker|default("nothing was installed") }}"
+- name: Get GPG key
+  command: curl -O https://download.docker.com/linux/ubuntu/gpg
+- name: Add Key
+  command: apt-key add ./gpg
+- name: Add Docker repository
+  command: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+  notify:
+    - Update cache Docker
+- meta: flush_handlers 
+- name: Install Docker
+  package: name={{ item }} state=present
+  with_items:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
   register: result_install_Docker
   tags:
     - Docker_Install
-- debug: msg="{{ result_install_Docker|default("nothing was installed") }}"
-  tags:
-    - debug_Docker_Installation
-- name: Add user todocker group
+- debug: msg="{{ result_install_Docker|default("nothing was installed") }}" 
+- name: Add user to docker group
   command: usermod -aG docker $USER

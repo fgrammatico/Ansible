@@ -1,2 +1,7 @@
 ---
 # handlers file for Desktop
+- name: Update cache
+  apt:
+    update_cache: True
+  tags:
+    - update_cache_desktop

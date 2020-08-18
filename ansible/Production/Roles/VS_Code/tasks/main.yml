@@ -1,0 +1,16 @@
+---
+# tasks file for VS_Code
+- name: Install Microsoft asc key
+  become_user: z3r0c00l
+  get_url: 
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    dest: ~/
+- name: Add Key
+  command: apt-key add ~/microsoft.asc
+- name: Add MS repo
+  command: add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+- name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
+  apt:
+    update_cache: yes
+- name: Install VS_Code
+  command: apt install code

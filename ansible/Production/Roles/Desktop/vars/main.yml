@@ -1,2 +1,3 @@
 ---
 # vars file for Desktop
+home : var=ansible_env.HOME

@@ -1,0 +1,14 @@
+---
+# This playbook will prepare a generic Linux Mint Desktop
+-
+  #Target
+  hosts: localhost
+  connection: local
+  roles:
+    #- Security
+    #- Docker
+    #- Desktop
+    #- AWS_CLI
+    #- Veracrypt
+    - VS_Code
+    

@@ -1,2 +1,7 @@
 ---
 # handlers file for Docker
+- name: Update cache Docker
+  apt:
+    update_cache: True
+  tags:
+    - update_cache_docker
