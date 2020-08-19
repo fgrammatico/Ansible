@@ -7,8 +7,8 @@
   roles:
     #- Security
     #- Docker
-    #- Desktop
+    - Desktop
     #- AWS_CLI
     #- Veracrypt
-    - VS_Code
+    #- VS_Code
     

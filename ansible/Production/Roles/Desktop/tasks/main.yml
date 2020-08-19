@@ -15,14 +15,35 @@
     - basic_packages_desktop
   notify:
     -  Update cache
+    
 - name: Install Python modules
-  command: pip3 install mysql-connector docker
+  command: pip3 install mysql-connector
   register: result_install_pymodules_desktop
   tags:
     - pip_specific_desktop
-- meta: flush_handlers        
+
+- meta: flush_handlers
+ 
 - debug: msg="{{ result_install_packages_desktop|default("nothing was installed") }}"
   tags:
     - debug_packages_desktop
+
+- name: add Signal apt-key
+  apt_key: 
+    url: https://updates.signal.org/desktop/apt/keys.asc 
+    state: present 
+
+- name: add import signal apt repository
+  apt_repository: 
+    repo: "deb [arch=amd64] https://updates.signal.org/desktop/apt xenial main" 
+    state: present 
+    filename: signal 
+    update_cache: yes
+
+- name: install Signal
+  apt: 
+    name: signal-desktop
+    state: present
+    update_cache: yes
 
 
