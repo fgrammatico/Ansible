@@ -1,29 +1,59 @@
 ---
 # tasks file for Security
-- name: Install basic packages Security
-  package: name={{ item }} state=present
-  with_items:
-    - net-tools #https://linuxx.info/net-tools/
-    - ssmtp #https://linuxhandbook.com/linux-send-email-ssmtp/
-    - fail2ban #https://linuxhandbook.com/fail2ban-basic/
-    - ssh
-    - rkhunter #https://help.ubuntu.com/community/RKhunter
-    - clamav
-  register: result_install_packages_sec
-  tags:
-    - basic_packages_sec 
-  notify:
-    - Update cache
-- meta: flush_handlers        
-- debug: msg="{{ result_install_packages_sec|default("nothing was installed") }}"
-  tags:
-    - debug_packages_sec
-- name: Overwrite ssmtp file to {{ ssmtp_dest }}
-  become: yes
-  copy:
-    src: ssmtp.conf
-    dest: "{{ ssmtp_dest }}"
-- name: Create issue.net file in {{ banner_target }}
-  copy:
-    src: issue.net
-    dest: "{{ banner_target }}"
+#- name: Install basic packages Security
+#  package: name={{ item }} state=present
+#  with_items:
+#    - net-tools #https://linuxx.info/net-tools/
+#    - ssmtp #https://linuxhandbook.com/linux-send-email-ssmtp/
+#    - fail2ban #https://linuxhandbook.com/fail2ban-basic/
+#    - ssh
+#    - rkhunter #https://help.ubuntu.com/community/RKhunter
+#    - clamav
+#  register: result_install_packages_sec
+#  tags:
+#    - basic_packages_sec 
+#  notify:
+#    - Update cache
+#
+#- meta: flush_handlers        
+#- debug: msg="{{ result_install_packages_sec|default("nothing was installed") }}"
+#  tags:
+#    - debug_packages_sec
+
+#- name: Overwrite ssmtp file to {{ ssmtp_dest }}
+#  become: yes
+#  copy:
+#    src: ssmtp.conf
+#    dest: "{{ ssmtp_dest }}"
+#
+#- name: Create issue.net file in {{ banner_target }}
+#  copy:
+#    src: issue.net
+#    dest: "{{ banner_target }}"
+
+- name: Set Firewall block outgoing
+  command: ufw default deny outgoing comment 'deny all outgoing traffic'
+
+- name: Set Firewall block incoming
+  command: ufw default deny incoming comment 'deny all incoming traffic'
+
+- name: Allow DNS
+  command: ufw allow out 53 comment 'allow DNS calls out'
+
+- name: Allow NTP
+  command: ufw allow out 123 comment 'allow NTP out'
+
+- name: Allow HTTP out
+  command: ufw allow out http comment 'allow HTTP traffic out'
+
+- name: Allow HTTPS out
+  command: ufw allow out https comment 'allow HTTPS traffic out'
+
+- name: Allow Whois out
+  command: ufw allow out whois comment 'allow whois'
+
+- name: Allow Plex out
+  command: ufw allow out plex comment 'allow Plex'
+
+- name: Start ufw
+  command: ufw enable
