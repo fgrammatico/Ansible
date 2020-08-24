@@ -8,27 +8,33 @@
 - debug: msg="{{ result_down_asc|default("nothing was downloaded") }}"
   tags:
     - get_veracrypt_asc
+
 - name: Import Veracrypt pgp key
   command: gpg --import ~/VeraCrypt_PGP_public_key.asc
 - name: Delete file ASC
   file:
     path: ~/VeraCrypt_PGP_public_key.asc
     state: absent
+
 - name: Get Veracrypt
   get_url:
     url: https://launchpad.net/veracrypt/trunk/1.24-update7/+download/veracrypt-1.24-Update7-Ubuntu-20.04-amd64.deb
     dest: ~/
+
 - name: Get Veracrypt sig
   get_url:
     url: https://launchpad.net/veracrypt/trunk/1.24-update7/+download/veracrypt-1.24-Update7-Ubuntu-20.04-amd64.deb.sig
     dest: ~/
+
 - name: Verify Veracrypt PGP
   command: gpg --verify ~/veracrypt-1.24-Update7-Ubuntu-20.04-amd64.deb.sig ~/veracrypt-1.24-Update7-Ubuntu-20.04-amd64.deb
   register: pgp_result
 - debug: msg= "{{ pgp_result|default("nothing was downloaded") }}"
+
 - name: Install Veracrypt
   apt:
    deb: ~/veracrypt-1.24-Update7-Ubuntu-20.04-amd64.deb
+   
 - name: Delete file Veracrypt.deb
   file:
     path: ~/veracrypt-1.24-Update7-Ubuntu-20.04-amd64.deb
