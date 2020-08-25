@@ -12,15 +12,20 @@
   tags:
     - preDocker_Install
 - debug: msg="{{ result_install_preDocker|default("nothing was installed") }}"
+
 - name: Get GPG key
   command: curl -O https://download.docker.com/linux/ubuntu/gpg
+
 - name: Add Key
   command: apt-key add ./gpg
+
 - name: Add Docker repository
   command: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
   notify:
     - Update cache Docker
+
 - meta: flush_handlers 
+
 - name: Install Docker
   package: name={{ item }} state=present
   with_items:
@@ -31,5 +36,6 @@
   tags:
     - Docker_Install
 - debug: msg="{{ result_install_Docker|default("nothing was installed") }}" 
+
 - name: Add user to docker group
   command: usermod -aG docker $USER

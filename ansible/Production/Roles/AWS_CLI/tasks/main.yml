@@ -6,12 +6,15 @@
     src: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
     dest: ~/
     remote_src: yes
+
 - name: Install AWS CLI
   command: ~/aws/install
   register: result_install_aws_cli
+
 - debug: msg="{{ result_install_aws_cli|default("nothing was installed") }}"
   tags:
     - aws_cli
+    
 - name: Recursively remove aws directory
   become_user: z3r0c00l
   file:
