@@ -1,3 +1,3 @@
 # Automation
-A collection of Ansible playbooks,Cloudformation templates and other orchestration tools.
+A collection of Ansible playbooks
 Work in progress.
