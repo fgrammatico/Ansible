@@ -1,3 +1,3 @@
-# Automation
-A collection of Ansible playbooks
+# Ansible Roles
+A collection of Ansible roles/playbooks
 Work in progress.
