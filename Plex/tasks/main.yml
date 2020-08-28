@@ -45,6 +45,6 @@
   tags:
     - docker_plex
 - name: Launch container Plex
-  command: docker run -d --name plex --network=host --restart unless-stopped -e TZ="Europe/Amsterdam" -e PLEX_CLAIM="claim-rsC1RGXAm3LJ3z7dW7Hn" -e PLEX_UID="1000" -e PLEX_GID="1000" -h PlexServer -v /mnt/raid1/Plexdb:/config -v /mnt/raid1/PlexTranscode:/transcode -v /mnt/raid1/Plex:/data plex_latest
+  command: docker run -d --name plex --network=host --restart unless-stopped -e TZ="Europe/Amsterdam" -e PLEX_CLAIM="claim-KBvWSrzMQTmAmq7yYqKw" -e PLEX_UID="1000" -e PLEX_GID="1000" -h PlexServer -v /mnt/raid1/Plexdb:/config -v /mnt/raid1/PlexTranscode:/transcode -v /mnt/raid1/Plex:/data plexinc/pms-docker
   tags:
     - docker_plex

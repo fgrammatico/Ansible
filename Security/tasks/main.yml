@@ -50,8 +50,5 @@
 - name: Allow Whois out
   command: ufw allow out whois comment 'allow whois'
 
-- name: Allow Plex out
-  command: ufw allow out plex comment 'allow Plex'
-
 - name: Start ufw
   command: ufw enable
