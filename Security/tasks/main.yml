@@ -12,10 +12,6 @@
   register: result_install_packages_sec
   tags:
     - basic_packages_sec 
-  notify:
-    - Update cache
-
-- meta: flush_handlers        
 - debug: msg="{{ result_install_packages_sec|default("nothing was installed") }}"
   tags:
     - debug_packages_sec
