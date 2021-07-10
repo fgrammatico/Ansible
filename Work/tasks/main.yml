@@ -1,0 +1,13 @@
+---
+- name: Install Teams
+  become_user: fg
+  apt:
+    deb: dpkg -i teams*.deb
+
+- name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
+  apt:
+    update_cache: yes
+
+- name: Install RemoteDesktopManager
+  apt:
+   deb: "https://cdn.devolutions.net/download/Linux/RDM/2021.1.2.3/RemoteDesktopManager.Free_2021.1.2.3_amd64.deb"
