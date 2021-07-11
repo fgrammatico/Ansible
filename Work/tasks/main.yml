@@ -2,7 +2,7 @@
 - name: Install Teams
   become_user: fg
   apt:
-    deb: dpkg -i teams*.deb
+    deb: "https://go.microsoft.com/fwlink/p/?LinkID=2112886&clcid=0x409&culture=en-us&country=US/teams*_amd64.deb"
 
 - name: Only run "update_cache=yes" if the last one is more than 3600 seconds ago
   become_user: fg
