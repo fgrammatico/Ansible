@@ -13,3 +13,13 @@
   become_user: fg
   apt:
    deb: "https://cdn.devolutions.net/download/Linux/RDM/2021.1.2.3/RemoteDesktopManager.Free_2021.1.2.3_amd64.deb"
+
+- name: Install conky
+    apt:
+      pkg: conky
+
+- name: Copy Conky config
+  get_url:
+    url: "https://mega.nz/file/ucM1GKyZ#cN-LYUv-nB2TsdMLsT3C1LJpq1P0ZNjbG2T6xXarqMA"
+    dest: /home/fg/.conkyrc
+    mode: '0777'
