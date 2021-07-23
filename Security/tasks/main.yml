@@ -6,7 +6,8 @@
     - net-tools #https://linuxx.info/net-tools/
     - ssmtp #https://linuxhandbook.com/linux-send-email-ssmtp/
     - fail2ban #https://linuxhandbook.com/fail2ban-basic/
-    - ssh
+    - openssh-server 
+    - openssh-client
     - rkhunter #https://help.ubuntu.com/community/RKhunter
     - clamav
   register: result_install_packages_sec
@@ -15,6 +16,7 @@
 - debug: msg="{{ result_install_packages_sec|default("nothing was installed") }}"
   tags:
     - debug_packages_sec
+
 - name: Overwrite ssmtp file to {{ ssmtp_dest }}
   become: yes
   copy:
@@ -45,6 +47,9 @@
 
 - name: Allow Whois out
   command: ufw allow out whois comment 'allow whois'
+
+- name: Allow SSH in
+  command: ufw allow in 56 comment 'allow SSH'
 
 - name: Start ufw
   command: ufw enable
