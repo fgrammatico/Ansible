@@ -12,7 +12,7 @@
     - clamav
   register: result_install_packages_sec
   tags:
-    - basic_packages_sec 
+    - SEC-basic_packages_sec 
 - debug: msg="{{ result_install_packages_sec|default("nothing was installed") }}"
   tags:
     - debug_packages_sec
@@ -27,29 +27,50 @@
   copy:
     src: issue.net
     dest: "{{ banner_target }}"
+  tags:
+    - SEC-create issue.net
+
 - name: Set Firewall block outgoing
   command: ufw default deny outgoing comment 'deny all outgoing traffic'
+  tags:
+    - SEC-set firewall block outgoing
 
 - name: Set Firewall block incoming
   command: ufw default deny incoming comment 'deny all incoming traffic'
+  tags:
+    - SEC-set firewall block incoming
 
 - name: Allow DNS
   command: ufw allow out 53 comment 'allow DNS calls out'
+  tags:
+    - SEC-firewall allow DNS
 
 - name: Allow NTP
   command: ufw allow out 123 comment 'allow NTP out'
+  tags:
+    - SEC-firewall allow NTP
 
 - name: Allow HTTP out
   command: ufw allow out http comment 'allow HTTP traffic out'
+  tags:
+    - SEC-firewall allow HTTP
 
 - name: Allow HTTPS out
   command: ufw allow out https comment 'allow HTTPS traffic out'
+  tags:
+    - SEC-firewall allow HTTPS
 
 - name: Allow Whois out
   command: ufw allow out whois comment 'allow whois'
+  tags:
+    - SEC-firewall allow WHOIS
 
 - name: Allow SSH in
   command: ufw allow in 56 comment 'allow SSH'
+  tags:
+    - SEC-firewall allow SSH
 
 - name: Start ufw
   command: ufw enable
+  tags:
+    - SEC-firewall UP!
